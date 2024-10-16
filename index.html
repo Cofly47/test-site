@@ -1,0 +1,744 @@
+<html>
+<head>
+    <style>
+        body {
+            margin: 0;
+            background-color: rgba(255, 17, 0, 0.68);
+        }
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%; 
+        }
+        .center-image {
+            width: 100%; 
+        }
+        .naslov {
+            text-align: center;
+        }
+        .select-container, .search-container, .table-container, .calculator-container, .carousel-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .search-container input[type="text"] {
+            padding: 8px;
+            width: 200px;
+        }
+        .search-container input[type="submit"] {
+            padding: 8px;
+        }
+        .padding-top-l {
+            padding-top: 40px;
+        }
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+        }
+        .carousel-container {
+            position: relative;
+            width: 80%;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .carousel {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        .carousel-item {
+            min-width: 20%;
+            box-sizing: border-box;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+            background-color: #fff;
+        }
+        .carousel-item img {
+            width: 100px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .carousel-item .price {
+            font-size: 1.5rem;
+            color: #000;
+        }
+        .carousel-item .description {
+            margin-top: 10px;
+            font-size: 1rem;
+            color: #333;
+        }
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            font-size: 18px;
+            padding: 10px;
+            border-radius: 3px;
+        }
+        .prev {
+            left: 0;
+        }
+        .next {
+            right: 0;
+        }
+        .super-prilika {
+            background-color: #ffeb3b;
+            color: #000;
+            padding: 2px 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+        .akcija {
+            background-color: #ff5722;
+            color: #fff;
+            padding: 2px 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+        .cart-section {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 250px;
+            background-color: #489c3d;
+            padding: 10px;
+            border: 5px solid #0f0b0b;
+            border-radius: 20px;
+            z-index: 1;
+        }
+
+        .cart-section ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .cart-section li {
+            margin-bottom: 10px;
+        }
+
+        .cart-section h2 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .calculator-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .calculator {
+            width: 260px;
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .calculator-display {
+            width: 100%;
+            height: 50px;
+            background-color: #000;
+            color: #fff;
+            text-align: right;
+            font-size: 24px;
+            padding: 10px;
+            box-sizing: border-box;
+            border-radius: 5px;
+        }
+        .calculator-keys {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 10px;
+            margin-top: 20px;
+        }
+        .calculator-keys button {
+            padding: 20px;
+            font-size: 18px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .calculator-keys button:active {
+            background-color: #45a049;
+        }
+        .calculator-keys button.operator {
+            background-color: #f39c12;
+        }
+        .calculator-keys button.operator:active {
+            background-color: #e67e22;
+        }
+        .calculator-keys button.equal {
+            background-color: #2980b9;
+        }
+        .calculator-keys button.equal:active {
+            background-color: #1f618d;
+        }
+        .calculator-keys button.clear {
+            background-color: #e74c3c;
+        }
+        .calculator-keys button.clear:active {
+            background-color: #c0392b;
+        }
+         /* Modal Styles */
+         .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            width: 400px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .close {
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        .cart-items {
+            margin-top: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .cart-item input[type="number"] {
+            width: 50px;
+        }
+
+        .cart-item .remove {
+            cursor: pointer;
+            color: red;
+            font-weight: bold;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .pay-btn {
+            background-color: green;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        let cart = [];
+        let total = 0;
+         
+        // Function to add an item to the cart
+        function addToCart(itemName, itemPrice) {
+            // Check if the item is already in the cart
+            let item = cart.find(cartItem => cartItem.name === itemName);
+
+            if (item) {
+                // If item exists, increase the quantity
+                item.quantity += 1;
+            } else {
+                // If item doesn't exist, add it to the cart
+                cart.push({ name: itemName, price: itemPrice, quantity: 1 });
+            }
+
+            // Update the total price
+            total += itemPrice;
+
+            // Display the cart
+            displayCart();
+        }
+
+       // Function to display the cart contents
+       function displayCart() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+            const showMoreButton = document.getElementById('show-more-button');
+
+            // Clear the current list
+            cartItemsContainer.innerHTML = '';
+
+            // Update the total price
+            cartTotal.textContent = `Total: ${total.toFixed(2)} €`;
+
+            console.log(cart)
+            console.log(cart.length)
+
+            // Show the "Show More" button if there are items
+            if (cart.length > 0) {
+                showMoreButton.style.display = 'block';
+            }
+        }
+
+        // Open Modal
+        function openModal() {
+            const modal = document.getElementById('cartModal');
+            modal.style.display = 'flex';
+            populateModalCart();
+        }
+
+        // Close Modal
+        function closeModal() {
+            const modal = document.getElementById('cartModal');
+            modal.style.display = 'none';
+        }
+
+        // Populate Modal with Cart Items
+        function populateModalCart() {
+            const modalCartItems = document.getElementById('modal-cart-items');
+            const modalCartTotal = document.getElementById('modal-cart-total');
+            modalCartItems.innerHTML = '';
+
+            cart.forEach((item, index) => {
+                const cartItemDiv = document.createElement('div');
+                cartItemDiv.classList.add('cart-item');
+
+                // Item name, quantity and price
+                cartItemDiv.innerHTML = `
+                    <span>${item.name}</span>
+                    <input type="number" value="${item.quantity}" min="1" onchange="changeQuantity(${index}, this.value)">
+                    <span>${(item.price * item.quantity).toFixed(2)} €</span>
+                    <span class="remove" onclick="removeItem(${index})">x</span>
+                `;
+
+                modalCartItems.appendChild(cartItemDiv);
+            });
+
+            // Update modal total
+            modalCartTotal.textContent = `${total.toFixed(2)} €`;
+        }
+
+        // Change item quantity in the modal
+        function changeQuantity(index, quantity) {
+            const item = cart[index];
+            const oldTotal = item.price * item.quantity;
+
+            cart[index].quantity = parseInt(quantity);
+            const newTotal = item.price * cart[index].quantity;
+
+            total += newTotal - oldTotal;
+            populateModalCart();
+            displayCart();
+        }
+
+        // Remove item from cart
+        function removeItem(index) {
+            const item = cart[index];
+            total -= item.price * item.quantity;
+            cart.splice(index, 1);
+
+            populateModalCart();
+            displayCart();
+        }
+
+        // Function to handle payment
+        function payNow() {
+            alert(`You have paid ${total.toFixed(2)} €.`);
+            // Clear the cart
+            cart = [];
+            total = 0;
+            closeModal();
+            displayCart();
+        }
+
+
+         let currentSlide = 0;
+
+        function moveCarousel(direction) {
+            const carousel = document.querySelector('.carousel');
+            const items = document.querySelectorAll('.carousel-item');
+            console.log(items)
+            const itemWidth = items[0].offsetWidth;
+            const totalItems = items.length;
+
+            currentSlide += direction;
+            if (currentSlide < 0) {
+                currentSlide = totalItems - 1;
+            } else if (currentSlide >= totalItems) {
+                currentSlide = 0;
+            }
+
+            carousel.style.transform = `translateX(${-currentSlide * itemWidth}px)`;
+        }
+
+        let counter = 0;
+        let counter2 = 0;
+
+        function changeBackground() {
+            var selectBox = document.getElementById("options");
+            var selectedValue = selectBox.value;
+
+            if (selectedValue === "option2") {
+                document.body.style.backgroundColor = "white";
+                counter = addNumber(counter, 1);
+
+                document.getElementById("counterDisplay").innerText = `Brojač: ${counter}`;
+            } 
+            else if (selectedValue === 'option1') {
+                document.body.style.backgroundColor = "rgba(255, 17, 0, 0.7)";
+                counter2 = addNumber(counter2, 1);
+
+                document.getElementById("counterDisplay2").innerText = `Brojač2: ${counter2}`;
+            } else {
+                document.body.style.backgroundColor = "rgba(255, 17, 0, 0.7)";
+                counter = 0;
+                counter2 = 0;
+                document.getElementById("counterDisplay2").innerText = `Brojač2: ${counter2}`;
+                document.getElementById("counterDisplay").innerText = `Brojač: ${counter}`;
+            }
+        }
+
+        function addNumber(a, b) {
+            return a + b;
+        }
+
+        function generateTable() {
+            const rowCount = document.getElementById("row").value;
+            const columnCount = document.getElementById("column").value;
+
+            const tableContainer = document.querySelector(".table-container");
+            const existingTable = document.querySelector("table");
+            if (existingTable) {
+                existingTable.remove();
+            }
+
+            const table = document.createElement("table");
+            for (let i = 0; i < rowCount; i++) {
+                const row = document.createElement("tr");
+                for (let j = 0; j < columnCount; j++) {
+                    const cell = document.createElement("td");
+                    const input = document.createElement('input')
+                    cell.innerHTML += 'Text:';
+                    cell.appendChild(input)
+                    row.appendChild(cell);
+                }
+                table.appendChild(row);
+            }
+            tableContainer.appendChild(table);
+        }
+
+        let currentInput = '0';
+        let previousInput = '';
+        let operator = null;
+
+        function updateDisplay() {
+            document.getElementById('display').innerText = currentInput;
+        }
+
+        function clearDisplay() {
+            currentInput = '0';
+            previousInput = '';
+            operator = null;
+            updateDisplay();
+        }
+
+        function appendNumber(number) {
+            if (currentInput === '0') {
+                currentInput = number.toString();
+            } else {
+                currentInput += number.toString();
+            }
+            updateDisplay();
+        }
+
+        function appendDecimal() {
+            if (!currentInput.includes('.')) {
+                currentInput += '.';
+                updateDisplay();
+            }
+        }
+
+        function chooseOperator(op) {
+            if (currentInput !== '') {
+                if (operator === null) {
+                    previousInput = currentInput;
+                } else {
+                    calculateResult();
+                }
+                operator = op;
+                currentInput = '0';
+            }
+        }
+
+        function calculateResult() {
+            if (operator === null || currentInput === '') return;
+            
+            let result;
+            const prev = parseFloat(previousInput);
+            const current = parseFloat(currentInput);
+
+            switch (operator) {
+                case '+':
+                    result = prev + current;
+                    break;
+                case '-':
+                    result = prev - current;
+                    break;
+                case '*':
+                    result = prev * current;
+                    break;
+                case '/':
+                    if (current === 0) {
+                        result = "Error";
+                    } else {
+                        result = prev / current;
+                    }
+                    break;
+                default:
+                    return;
+            }
+
+            currentInput = result.toString();
+            operator = null;
+            updateDisplay();
+        }
+    </script>
+</head>
+<body>
+    <div class="center">
+        <img src="https://www.vecernji.hr/media/img/6f/e9/ff8ce05f8c680727d6d6.jpeg" alt="Opis slike" class="center-image">
+        <h1 class="naslov">Konzum klik tale</h1>
+        <p>bok</p>
+    </div>
+     <!-- Cart Section -->
+     <div id="cart" class="cart-section">
+        <h2>Your Cart</h2>
+        <ul id="cart-items"></ul>
+        <p id="cart-total">Total: 0.00 €</p>
+        <button id="show-more-button" style="display:none;" onclick="openModal()">Show more</button>
+    </div>
+    
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Your Cart</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="cart-items" id="modal-cart-items">
+                <!-- Cart items will go here dynamically -->
+            </div>
+            <div class="modal-footer">
+                <span>Total: <strong id="modal-cart-total">0.00 €</strong></span>
+                <button class="pay-btn" onclick="payNow()">Pay</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="carousel-container">
+        <div class="carousel">
+            <div class="carousel-item">
+                <span class="super-prilika">SUPER PRILIKA</span>
+                <img src="https://via.placeholder.com/150" alt="Product 1">
+                <p class="description">Minute Štrudla jabuka 500g</p>
+                <p class="price">1.49 € / kom</p>
+                <p>Cijena za j.m.: 2.98 €/kg</p>
+                <p>Vrijedi do: 16.10.2024</p>
+                <div class="cart-button">
+                    <img src="/mnt/data/image.png" alt="Add to cart" width="30" height="30" onclick="addToCart('Minute Štrudla jabuka', 1.49)">
+                </div>
+            </div>
+            <div class="carousel-item">
+                <span class="super-prilika">SUPER PRILIKA</span>
+                <img src="https://via.placeholder.com/150" alt="Product 2">
+                <p class="description">Garden Good Grašak 1 kg</p>
+                <p class="price">1.59 € / kom</p>
+                <p>Cijena za j.m.: 1.59 €/kg</p>
+                <p>Vrijedi do: 16.10.2024</p>
+                <div class="cart-button">
+        <img src="/mnt/data/image.png" alt="Add to cart" width="30" height="30" onclick="addToCart('Garden Good Grašak 1 kg', 1.59)">
+    </div>
+            </div>
+            <div class="carousel-item">
+                <span class="super-prilika">SUPER PRILIKA</span>
+                <img src="https://via.placeholder.com/150" alt="Product 3">
+                <p class="description">Minute Okruglice Šljiva 1 kg</p>
+                <p class="price">1.99 € / kom</p>
+                <p>Cijena za j.m.: 1.99 €/kg</p>
+                <p>Vrijedi do: 16.10.2024</p>
+                <div class="cart-button">
+                    <img src="/mnt/data/image.png" alt="Add to cart" width="30" height="30" onclick="addToCart('Minute Okruglice Šljiva 1 kg', 1.99)">
+                </div>
+            </div>
+            <div class="carousel-item">
+                <span class="akcija">AKCIJA -21%</span>
+                <img src="https://via.placeholder.com/150" alt="Product 4">
+                <p class="description">Ledo Zagrebački odrezak 400g</p>
+                <p class="price">5.49 € / kom</p>
+                <p>Cijena za j.m.: 13.73 €/kg</p>
+                <p>Vrijedi do: 16.10.2024</p>
+                <div class="cart-button">
+                    <img src="/mnt/data/image.png" alt="Add to cart" width="30" height="30" onclick="addToCart('Ledo Zagrebački odrezak 400g', 5.49)">
+                </div>
+            </div>
+            <div class="carousel-item">
+                <span class="akcija">AKCIJA -27%</span>
+                <img src="https://via.placeholder.com/150" alt="Product 5">
+                <p class="description">Kruh carski beskvasni 350g</p>
+                <p class="price">1.55 € / kom</p>
+                <p>Cijena za j.m.: 4.43 €/kg</p>
+                <p>Vrijedi do: 16.10.2024</p>
+                <div class="cart-button">
+                    <img src="/mnt/data/image.png" alt="Add to cart" width="30" height="30" onclick="addToCart('Kruh carski beskvasni 350g', 1.55)">
+                </div>
+            </div>
+            <div class="carousel-item">
+                <span class="super-prilika">SUPER PRILIKA</span>
+                <img src="https://via.placeholder.com/150" alt="Product 1">
+                <p class="description">Minute Štrudla jabuka 500g</p>
+                <p class="price">1.49 € / kom</p>
+                <p>Cijena za j.m.: 2.98 €/kg</p>
+                <p>Vrijedi do: 16.10.2024</p>
+                <div class="cart-button">
+                    <img src="/mnt/data/image.png" alt="Add to cart" width="30" height="30" onclick="addToCart('Minute Štrudla jabuka', 1.49)">
+                </div>
+            </div>
+            <div class="carousel-item">
+                <span class="super-prilika">SUPER PRILIKA</span>
+                <img src="https://via.placeholder.com/150" alt="Product 2">
+                <p class="description">Garden Good Grašak 1 kg</p>
+                <p class="price">1.59 € / kom</p>
+                <p>Cijena za j.m.: 1.59 €/kg</p>
+                <p>Vrijedi do: 16.10.2024</p>
+                <div class="cart-button">
+        <img src="/mnt/data/image.png" alt="Add to cart" width="30" height="30" onclick="addToCart('Garden Good Grašak 1 kg', 1.59)">
+    </div>
+            </div>
+            <div class="carousel-item">
+                <span class="super-prilika">SUPER PRILIKA</span>
+                <img src="https://via.placeholder.com/150" alt="Product 3">
+                <p class="description">Minute Okruglice Šljiva 1 kg</p>
+                <p class="price">1.99 € / kom</p>
+                <p>Cijena za j.m.: 1.99 €/kg</p>
+                <p>Vrijedi do: 16.10.2024</p>
+                <div class="cart-button">
+                    <img src="/mnt/data/image.png" alt="Add to cart" width="30" height="30" onclick="addToCart('Minute Okruglice Šljiva 1 kg', 1.99)">
+                </div>
+            </div>
+            <div class="carousel-item">
+                <span class="akcija">AKCIJA -21%</span>
+                <img src="https://via.placeholder.com/150" alt="Product 4">
+                <p class="description">Ledo Zagrebački odrezak 400g</p>
+                <p class="price">5.49 € / kom</p>
+                <p>Cijena za j.m.: 13.73 €/kg</p>
+                <p>Vrijedi do: 16.10.2024</p>
+                <div class="cart-button">
+                    <img src="/mnt/data/image.png" alt="Add to cart" width="30" height="30" onclick="addToCart('Ledo Zagrebački odrezak 400g', 5.49)">
+                </div>
+            </div>
+            <div class="carousel-item">
+                <span class="akcija">AKCIJA -27%</span>
+                <img src="https://via.placeholder.com/150" alt="Product 5">
+                <p class="description">Kruh carski beskvasni 350g</p>
+                <p class="price">1.55 € / kom</p>
+                <p>Cijena za j.m.: 4.43 €/kg</p>
+                <p>Vrijedi do: 16.10.2024</p>
+                <div class="cart-button">
+                    <img src="/mnt/data/image.png" alt="Add to cart" width="30" height="30" onclick="addToCart('Kruh carski beskvasni 350g', 1.55)">
+                </div>
+            </div>
+            
+        </div>
+        <button class="prev" onclick="moveCarousel(-1)">&#10094;</button>
+        <button class="next" onclick="moveCarousel(1)">&#10095;</button>
+    </div>
+
+    <div class="select-container">
+        <label for="options">Odaberi opciju:</label>
+        <select id="options" name="options" onchange="changeBackground()">
+            <option value="option1">Opcija 1</option>
+            <option value="option2">Opcija 2</option>
+            <option value="option3">Resetiraj</option>
+        </select>
+        <p id="counterDisplay">Brojač: 0</p>
+        <p id="counterDisplay2">Brojač2: 0</p>
+    </div>
+
+    <div class="search-container">
+        <form action="/search" method="GET">
+            <input type="text" name="query" placeholder="Pretraži...">
+            <input type="submit" value="Pretraži">
+        </form>
+    </div>
+
+    <div class="table-container padding-top-l">
+        <h2>Kreator tablice</h2>
+        <input id="row" type="number" name="row" placeholder="Broj redova" min="1" max="10"> X 
+        <input id="column" type="number" name="column" placeholder="Broj stupaca" min="1" max="10" >
+        <button onclick="generateTable()">Generiraj tablicu</button>
+    </div>
+
+    <div class="calculator-container padding-top-l">
+        <h2>Calculator</h2>
+        <div class="calculator">
+            <div id="display" class="calculator-display">0</div>
+            <div class="calculator-keys">
+                <button class="clear" onclick="clearDisplay()">C</button>
+                <button onclick="appendNumber(7)">7</button>
+                <button onclick="appendNumber(8)">8</button>
+                <button onclick="appendNumber(9)">9</button>
+
+                <button class="operator" onclick="chooseOperator('+')">+</button>
+                <button onclick="appendNumber(4)">4</button>
+                <button onclick="appendNumber(5)">5</button>
+                <button onclick="appendNumber(6)">6</button>
+
+                <button class="operator" onclick="chooseOperator('-')">-</button>
+                <button onclick="appendNumber(1)">1</button>
+                <button onclick="appendNumber(2)">2</button>
+                <button onclick="appendNumber(3)">3</button>
+
+                <button class="operator" onclick="chooseOperator('*')">&times;</button>
+                <button onclick="appendNumber(0)">0</button>
+                <button onclick="appendDecimal()">.</button>
+                <button class="equal" onclick="calculateResult()">=</button>
+
+                <button class="operator" onclick="chooseOperator('/')">&divide;</button>
+            </div>
+        </div>
+    </div>
+</body>    
+</html>
