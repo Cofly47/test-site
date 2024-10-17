@@ -304,13 +304,15 @@
             // Update the total price
             cartTotal.textContent = `Total: ${total.toFixed(2)} €`;
 
-            console.log(cart)
-            console.log(cart.length)
 
             // Show the "Show More" button if there are items
             if (cart.length > 0) {
                 showMoreButton.style.display = 'block';
+            } else {
+                showMoreButton.style.display = 'none';
+                
             }
+            
         }
 
         // Open Modal
@@ -339,10 +341,15 @@
                 // Item name, quantity and price
                 cartItemDiv.innerHTML = `
                     <span>${item.name}</span>
+                    <span class="minus" onclick="changeQuantity(${index}, ${item.quantity} === 1 ? ${item.quantity} : ${item.quantity} - 1)">-</span>
                     <input type="number" value="${item.quantity}" min="1" onchange="changeQuantity(${index}, this.value)">
+                    <span class="plus" onclick="changeQuantity(${index}, ${item.quantity} + 1)">+</span>
                     <span>${(item.price * item.quantity).toFixed(2)} €</span>
                     <span class="remove" onclick="removeItem(${index})">x</span>
+                   
+                    
                 `;
+                    
 
                 modalCartItems.appendChild(cartItemDiv);
             });
@@ -370,8 +377,14 @@
             total -= item.price * item.quantity;
             cart.splice(index, 1);
 
+            if (cart.length === 0){
+                closeModal()
+
+            }
+
             populateModalCart();
             displayCart();
+
         }
 
         // Function to handle payment
@@ -390,7 +403,6 @@
         function moveCarousel(direction) {
             const carousel = document.querySelector('.carousel');
             const items = document.querySelectorAll('.carousel-item');
-            console.log(items)
             const itemWidth = items[0].offsetWidth;
             const totalItems = items.length;
 
@@ -547,16 +559,17 @@
      <div id="cart" class="cart-section">
         <h2>Your Cart</h2>
         <ul id="cart-items"></ul>
-        <p id="cart-total">Total: 0.00 €</p>
+        <p id="cart-total">Total:0.00 €</p>
         <button id="show-more-button" style="display:none;" onclick="openModal()">Show more</button>
     </div>
-    
+
     <!-- Cart Modal -->
     <div id="cartModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Your Cart</h2>
                 <span class="close" onclick="closeModal()">&times;</span>
+                
             </div>
             <div class="cart-items" id="modal-cart-items">
                 <!-- Cart items will go here dynamically -->
